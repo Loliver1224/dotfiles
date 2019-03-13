@@ -1,0 +1,12 @@
+ctrlp.vim
+neobundle.vim
+neocomplcache
+neosnippet-snippets
+neosnippet.vim
+unite.vim
+vim-colorschemes
+vim-easymotion
+vim-endwise
+vim-fugitive
+vimproc
+vimshell
