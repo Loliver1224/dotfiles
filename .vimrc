@@ -1,153 +1,312 @@
-set number "行番号の表示
-set tabstop=4 "tabをスペースN個分に
-set expandtab "tabを半角スペースで挿入
-set shiftwidth=4
-set autoindent
-set title
-nnoremap <Esc><Esc> :nohlsearch<CR><ESC>
-syntax on
-hi Comment ctermfg=3
-set fenc=utf-8
-set noswapfile
-set cursorline
-set showmatch
-set encoding=utf-8
-set fileencoding=utf-8
-set history=100
-set ruler
-set showcmd
-set laststatus=2
-set smartindent
-set mouse=a
-inoremap jj <Esc>
-
-augroup highlightIdegraphicSpace
-	autocmd!
-	autocmd ColorScheme * highlight IdeographicSpace term=underline ctermbg=DarkGreen
-	autocmd VimEnter,WinEnter * match IdeographicSpace /　/
-augroup END
-
-"Neobundle Scripts------------------------------
-if &compatible
-	set nocompatible	" Be iMproved
+" setting
+if has('vim_starting')
+  set nocompatible
 endif
 
-" Required:
-set runtimepath+=/home/student/2017/hi17furukawa/.vim/bundle/neobundle.vim/
+if !filereadable(expand('~/.vim/autoload/plug.vim'))
+  if !executable("curl")
+    echoerr "You have to install curl or first install vim-plug yourself!"
+    execute "q!"
+  endif
+  echo "Installing Vim-Plug..."
+  echo ""
+  silent !\curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  let g:not_finish_vimplug = "yes"
+  autocmd VimEnter * PlugInstall
+endif
 
-" Required:
-call neobundle#begin(expand('/home/student/2017/hi17furukawa/.vim/bundle'))
-
-" Let NeoBundle manage NeoBundle
-" Required:
-NeoBundleFetch 'Shougo/neobundle.vim/'
-
-" Add or remove your Bundles here:
-NeoBundle 'Shougo/neosnippet.vim'
-NeoBundle 'Shougo/neosnippet-snippets'
-NeoBundle 'tpope/vim-fugitive'
-NeoBundle 'ctrlpvim/ctrlp.vim'
-NeoBundle 'flazz/vim-colorschemes'
-
-
-NeoBundle 'Shougo/unite.vim'
-" unite {{{
-let g:unite_enable_start_insert=1
-nmap <silent> <C-u><C-b> :<C-u>Unite buffer<CR>
-nmap <silent> <C-u><C-f> :<C-u>UniteWithBufferDir -buffer-name=files file<CR>
-nmap <silent> <C-u><C-r> :<C-u>Unite -buffer-name=register register<CR>
-nmap <silent> <C-u><C-m> :<C-u>Unite file_mru<CR>
-nmap <silent> <C-u><C-u> :<C-u>Unite buffer file_mru<CR>
-nmap <silent> <C-u><C-a> :<C-u>UniteWithBufferDir -buffer-name=files buffer file_mru bookmark file<CR>
-au FileType unite nmap <silent> <buffer> <expr> <C-j> unite#do_action('split')
-au FileType unite imap <silent> <buffer> <expr> <C-j> unite#do_action('split')
-au FileType unite nmap <silent> <buffer> <expr> <C-l> unite#do_action('vsplit')
-au FileType unite imap <silent> <buffer> <expr> <C-l> unite#do_action('vsplit')
-au FileType unite nmap <silent> <buffer> <ESC><ESC> q
-au FileType unite imap <silent> <buffer> <ESC><ESC> <ESC>q
-" }}}
-
-NeoBundle 'Shougo/vimproc', {
-	\ 'build' : {
-	\	'windows' : 'make -f make_mingw32.mak',
-	\	'cygwin' : 'make -f make_cygwin.mak',
-	\	'mac' : 'make -f make_mac.mak',
-	\	'unix' : 'make -f make_unix.mak',
-	\	},
-	\ }
-
-"" neocomplcache
-NeoBundle 'Shougo/neocomplcache'
-" Disable AutoComplPop.
-let g:acp_enableAtStartup = 0
-" Use neocomplcache.
-let g:neocomplcache_enable_at_startup = 1
-" Use smartcase.
-let g:neocomplcache_enable_smart_case = 1
-" Set minimum syntax keyword length.
-let g:neocomplcache_min_syntax_length = 3
-let g:neocomplcache_lock_buffer_name_pattern = '\*ku\*'
-
-" Define dictionary.
-let g:neocomplcache_dictionary_filetype_lists = {
-	\ 'default' : ''
-	\ }
-
-" Plugin key-mappings.
-inoremap <expr><C-g>	neocomplcache#undo_completion()
-inoremap <expr><C-l>	neocomplcache#complete_common_string()
-
-" Recommended key-mappings.
-" <CR>: close popup and save indent.
-inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-function! s:my_cr_function()
-	return neocomplcache#smart_close_popup() . "\<CR>"
-endfunction
-" <TAB>: completion.
-inoremap <expr><TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
-" <C-h>, <BS>: close popup and delete backword char.
-inoremap <expr><C-h> neocomplcache#smart_close_popup()."\<C-h>"
-inoremap <expr><BS> neocomplcache#smart_close_popup()."\<C-h>"
-inoremap <expr><C-y> neocomplcache#close_popup()
-inoremap <expr><C-e> neocomplcache#cancel_popup()
-
-
-NeoBundle 'tpope/vim-endwise', {
-	\ 'autoload' : { 'insert' : 1,}}
-
-NeoBundle 'Lokaltog/vim-easymotion'
-" vim-easymotion {{{
-let g:EasyMotion_do_mapping = 0
-nmap s <Plug>(easymotion-s2)
-xmap}s <Plug>(easymotion-s2)
-omap z <Plug>(easymotion-s2)
-nmap g/ <Plug>(easymotion-sn)
-xmap g/ <Plug>(easymotion-sn)
-omap g/ <Plug>(easymotion-tn)
-let g:EasyMotion_smartcase = 1
-map <Leader>j <Plug>(easymotion-j)
-map <Leader>k <Plug>(easymotion-k)
-let g:EasyMotion_startofline = 0
-let g:EasyMotion_keys = 'QZASDFGHJKL;'
-let g:EasyMotion_use_upper = 1
-let g:EasyMotion_enter_jump_first = 1
-" }}}
-
-
-NeoBundle 'Shougo/vimshell', { 'rev' : '3787e5' }
-
-" Required:
-call neobundle#end()
-
-" Required:
+" plugin
+call plug#begin(expand('~/.vim/plugged'))
+"" space + ne -> sidebar
+Plug 'scrooloose/nerdtree'
+Plug 'jistr/vim-nerdtree-tabs'
+"" ga -> align
+Plug 'junegunn/vim-easy-align'
+"" space + go -> exec script
+Plug 'thinca/vim-quickrun'
+Plug 'Shougo/vimproc.vim', {'do' : 'make'}
+"" gcc -> comment
+Plug 'tpope/vim-commentary'
+"" option bar
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+"" auto bracket
+Plug 'Raimondi/delimitMate'
+Plug 'tpope/vim-surround'
+"" error detect
+Plug 'scrooloose/syntastic'
+"" delete white space
+Plug 'bronson/vim-trailing-whitespace'
+"" auto complete
+Plug 'sheerun/vim-polyglot'
+"Plug 'Valloric/YouCompleteMe'
+Plug 'ervandew/supertab'
+"" html
+Plug 'hail2u/vim-css3-syntax'
+Plug 'gorodinskiy/vim-coloresque'
+Plug 'tpope/vim-haml'
+Plug 'mattn/emmet-vim'
+"" javascript
+Plug 'jelera/vim-javascript-syntax'
+"" php
+Plug 'arnaud-lb/vim-php-namespace'
+"" python
+Plug 'davidhalter/jedi-vim'
+Plug 'raimon49/requirements.txt.vim', {'for': 'requirements'}
+"" space + sh -> vimshell
+Plug 'Shougo/vimshell.vim'
+"" neocomplete
+Plug 'Shougo/neocomplcache.vim'
+"" indent-guides
+"Plug 'nathanaelkane/vim-indent-guides'
+"" DraculaTheme
+Plug 'dracula/vim', {'as': 'dracula'}
+call plug#end()
 filetype plugin indent on
+let mapleader="\<Space>"
 
-" jellybeans カラースキーマ
-set t_Co=256
+"" automatic on indent-guides
+"let g:indent_guides_enable_on_vim_startup = 1
+let g:neocomplcache_enable_at_startup = 1
+colorschem dracula
+
+" vim-airline
+let g:airline_theme = 'powerlineish'
+let g:airline#extensions#syntastic#enabled = 1
+let g:airline#extensions#branch#enabled = 1
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tagbar#enabled = 1
+let g:airline_skip_empty_sections = 1
+
+"" nerdtree
+let g:NERDTreeChDirMode=2
+let g:NERDTreeIgnore=['\.rbc$', '\~$', '\.pyc$', '\.db$', '\.sqlite$', '__pycache__']
+let g:NERDTreeSortOrder=['^__\.py$', '\/$', '*', '\.swp$', '\.bak$', '\~$']
+let g:NERDTreeShowBookmarks=1
+let g:nerdtree_tabs_focus_on_files=1
+let g:NERDTreeMapOpenInTabSilent = '<RightMouse>'
+let g:NERDTreeWinSize = 30
+let NERDTreeShowHidden=1
+set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.pyc,*.db,*.sqlite
+nnoremap <Leader>dir :NERDTreeTabsToggle<CR>
+autocmd BufWritePre * :FixWhitespace
+
+"" quickrun
+nnoremap <Leader>go :QuickRun<CR>
+let g:quickrun_config={'*': {'split': ''}}
+
+"" vim-easy-align
+xmap ga <Plug>(EasyAlign)
+nmap ga <Plug>(EasyAlign)
+
+"" vimshell
+"" nnoremap <Leader>sh :VimShellPop<CR>
+"nnoremap <Leader>sh :vertical terminal<CR>
+nnoremap <leader>sh :vsplit<CR>:VimShell<CR>
+let g:vimshell_user_prompt = 'fnamemodify(getcwd(), ":~")'
+let g:vimshell_prompt =  '$ '
+
+"" syntastic
+let g:syntastic_always_populate_loc_list=1
+let g:syntastic_error_symbol='✗'
+let g:syntastic_warning_symbol='⚠'
+let g:syntastic_style_error_symbol = '✗'
+let g:syntastic_style_warning_symbol = '⚠'
+let g:syntastic_auto_loc_list=1
+let g:syntastic_aggregate_errors = 1
+
+"" jedi-vim
+let g:jedi#popup_on_dot = 0
+let g:jedi#goto_assignments_command = "<leader>g"
+let g:jedi#goto_definitions_command = "<leader>d"
+let g:jedi#documentation_command = "K"
+let g:jedi#usages_command = "<leader>n"
+let g:jedi#rename_command = "<leader>r"
+let g:jedi#show_call_signatures = "0"
+let g:jedi#completions_command = "<C-Space>"
+let g:jedi#smart_auto_mappings = 0
+let g:jedi#force_py_version = 3
+autocmd FileType python setlocal completeopt-=preview
+
+"" syntastic
+let g:syntastic_python_checkers=['python', 'flake8']
+let g:polyglot_disabled = ['python']
+let python_highlight_all = 1
+
+"" vim-airline
+let g:airline#extensions#virtualenv#enabled = 1
+if !exists('g:airline_symbols')
+  let g:airline_symbols = {}
+endif
+if !exists('g:airline_powerline_fonts')
+  let g:airline#extensions#tabline#left_sep = ' '
+  let g:airline#extensions#tabline#left_alt_sep = '|'
+  let g:airline_left_sep          = '▶'
+  let g:airline_left_alt_sep      = '»'
+  let g:airline_right_sep         = '◀'
+  let g:airline_right_alt_sep     = '«'
+  let g:airline#extensions#branch#prefix     = '⤴' "➔, ➥, ⎇
+  let g:airline#extensions#readonly#symbol   = '⊘'
+  let g:airline#extensions#linecolumn#prefix = '¶'
+  let g:airline#extensions#paste#symbol      = 'ρ'
+  let g:airline_symbols.linenr    = '␊'
+  let g:airline_symbols.branch    = '⎇'
+  let g:airline_symbols.paste     = 'ρ'
+  let g:airline_symbols.paste     = 'Þ'
+  let g:airline_symbols.paste     = '∥'
+  let g:airline_symbols.whitespace = 'Ξ'
+else
+  let g:airline#extensions#tabline#left_sep = ''
+  let g:airline#extensions#tabline#left_alt_sep = ''
+  let g:airline_left_sep = ''
+  let g:airline_left_alt_sep = ''
+  let g:airline_right_sep = ''
+  let g:airline_right_alt_sep = ''
+  let g:airline_symbols.branch = ''
+  let g:airline_symbols.readonly = ''
+  let g:airline_symbols.linenr = ''
+endif
+
+" function
+"" xaml
+augroup MyXML
+  autocmd!
+  autocmd Filetype xml inoremap <buffer> </ </<C-x><C-o>
+  autocmd Filetype html inoremap <buffer> </ </<C-x><C-o>
+augroup END
+
+"" The PC is fast enough, do syntax highlight syncing from start unless 200 lines
+augroup vimrc-sync-fromstart
+  autocmd!
+  autocmd BufEnter * :syntax sync maxlines=200
+augroup END
+
+"" Remember cursor position
+augroup vimrc-remember-cursor-position
+  autocmd!
+  autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
+augroup END
+
+"" txt
+augroup vimrc-wrapping
+  autocmd!
+  autocmd BufRead,BufNewFile *.txt call s:setupWrapping()
+augroup END
+if !exists('*s:setupWrapping')
+  function s:setupWrapping()
+    set wrap
+    set wm=2
+    set textwidth=79
+  endfunction
+endif
+
+"" make/cmake
+augroup vimrc-make-cmake
+  autocmd!
+  autocmd FileType make setlocal noexpandtab
+  autocmd BufNewFile,BufRead CMakeLists.txt setlocal filetype=cmake
+augroup END
+
+"" python
+augroup vimrc-python
+  autocmd!
+  autocmd FileType python setlocal
+      \ formatoptions+=croq softtabstop=4
+      \ cinwords=if,elif,else,for,while,try,except,finally,def,class,with
+augroup END
+
+" shortcut leader=Space
+"" save
+nnoremap <Leader>w :w<CR>
+nnoremap <Leader>qqq :q!<CR>
+nnoremap <Leader>eee :e<CR>
+nnoremap <Leader>wq :wq<CR>
+nnoremap <Leader>nn :noh<CR>
+
+"" split
+nnoremap <Leader>s :<C-u>split<CR>
+nnoremap <Leader>v :<C-u>vsplit<CR>
+
+"" Tabs
+nnoremap <Tab> gt
+nnoremap <S-Tab> gT
+nnoremap <Leader>t :tabnew<CR>
+
+"" ignore wrap
+nnoremap j gj
+nnoremap k gk
+nnoremap <Down> gj
+nnoremap <Up> gk
+
+"" Sft + y => yunk to EOL
+nnoremap Y y$
+
+"" + => increment
+nnoremap + <C-a>
+
+"" - => decrement
+nnoremap - <C-x>
+
+"" move 15 words
+nmap <silent> <Tab> 15<Right>
+nmap <silent> <S-Tab> 15<Left>
+nmap <silent> ll 15<Right>
+nmap <silent> hh 15<Left>
+nmap <silent> jj 15<Down>
+nmap <silent> kk 15<Up>
+
+"" move line/word
+nmap <C-e> $
+nmap <C-a> 0
+nmap <C-f> W
+nmap <C-b> B
+imap <C-e> <C-o>$
+imap <C-a> <C-o>0
+imap <C-f> <C-o>W
+imap <C-b> <C-o>B
+
+inoremap ee <Esc>
+
+" base
+set encoding=utf-8
+set fileencoding=utf-8
+set fileencodings=utf-8
+set bomb
+set binary
+set ttyfast
+set backspace=indent,eol,start
+set tabstop=4
+set softtabstop=0
+set shiftwidth=4
+set expandtab
+set splitright
+set splitbelow
+set hidden
+set hlsearch
+set incsearch
+set ignorecase
+set smartcase
+set nobackup
+set noswapfile
+set fileformats=unix,dos,mac
 syntax on
-colorscheme molokai_dark
-
-" If there are uninstalled bundles found on startup,
-" this will conveniently prompt you to install them.
-NeoBundleCheck
-"End NeoBundle Scripts------------------------------
+set ruler
+set number
+set gcr=a:blinkon0
+set scrolloff=3
+set laststatus=2
+set modeline
+set modelines=10
+set title
+set titleold="Terminal"
+set titlestring=%F
+set statusline=%F%m%r%h%w%=(%{&ff}/%Y)\ (line\ %l\/%L,\ col\ %c)\
+set autoread
+set noerrorbells visualbell t_vb=
+set clipboard+=unnamed,autoselect
+set mouse=a
+set whichwrap=b,s,h,l,<,>,[,]
+highlight Pmenu ctermbg=233 ctermfg=241
+highlight PmenuSel ctermbg=233 ctermfg=166
+highlight Search ctermbg=166 ctermfg=233
+highlight Visual ctermbg=166 ctermfg=233
