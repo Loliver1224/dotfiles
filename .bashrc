@@ -28,13 +28,15 @@ alias bashrc='source ~/.bashrc'
 alias cat='cat -n'
 alias rmdir='rmdir -pv'
 
-alias bk='cd ..'
+alias ..='cd ..'
+alias ....='cd ../..'
+
+alias v='vim'
+alias c='clear'
 
 # git
 alias gs='git status'
 alias gd='git diff'
 alias gc='git commit'
-
-alias runcode='./a.out < stdin.dat'
 
 # source ~/.bash_profile
